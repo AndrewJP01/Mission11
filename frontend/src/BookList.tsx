@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Book } from './types/book';
 
-function BookList() {
+function BookList({ selectedCategories }: { selectedCategories: string[] }) {
   const [books, setBooks] = useState<Book[]>([]);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
@@ -11,9 +11,12 @@ function BookList() {
 
   useEffect(() => {
     const fetchBooks = async () => {
+      const categoryParams = selectedCategories
+        .map((cat) => `bookCategory=${encodeURIComponent(cat)}`)
+        .join('&');
       try {
         const response = await fetch(
-          `https://localhost:5000/Book/AllBooks?pageSize=${pageSize}&pageNum=${pageNum}`
+          `https://localhost:5000/Book/AllBooks?pageSize=${pageSize}&pageNum=${pageNum}${selectedCategories.length ? `&${categoryParams}` : ''}`
         );
         if (!response.ok) throw new Error('Failed to fetch');
 
@@ -36,12 +39,10 @@ function BookList() {
     };
 
     fetchBooks();
-  }, [pageSize, pageNum, sortOrder]);
+  }, [pageSize, pageNum, sortOrder, selectedCategories]);
 
   return (
     <>
-      <h1>My Books</h1>
-
       {books.map((b) => (
         <div id="bookCard" className="card" key={b.bookId}>
           <h3>{b.title}</h3>

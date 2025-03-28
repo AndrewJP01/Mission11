@@ -13,13 +13,22 @@ namespace Mission11.Controllers
         public BookController(BookDbContext temp) => _bookContext = temp;
 
         [HttpGet("AllBooks")]
-        public IActionResult GetBooks(int pageSize = 10, int pageNum = 1)
+        public IActionResult GetBooks(int pageSize = 10, int pageNum = 1, [FromQuery] List<string>? bookCategory = null)
         {
-            var something = _bookContext.Books
+            var query = _bookContext.Books.AsQueryable();
+
+            if (bookCategory != null && bookCategory.Any())
+            {
+                query = query.Where(p => bookCategory.Contains(p.Category));
+            }
+
+            var totalNumBooks = query.Count();
+
+            var something = query
                 .Skip((pageNum - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
-            var totalNumBooks = _bookContext.Books.Count();
+            
 
             var someObject = new
             {
@@ -28,6 +37,17 @@ namespace Mission11.Controllers
             };
 
             return Ok(someObject);
+        }
+
+        [HttpGet("GetBookCategory")]
+        public IActionResult GetBookCategory() 
+        { 
+            var bookCategory = _bookContext.Books
+                .Select(b => b.Category)
+                .Distinct()
+                .ToList();
+
+            return Ok(bookCategory);
         }
     }
 }
