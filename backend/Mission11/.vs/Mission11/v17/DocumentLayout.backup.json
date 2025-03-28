@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\andre\\source\\repos\\Mission11\\backend\\Mission11\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C0330174-FDAA-4B90-809B-145582EB7365}|Mission11\\Mission11.csproj|c:\\users\\andre\\source\\repos\\mission11\\backend\\mission11\\mission11\\data\\bookdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C0330174-FDAA-4B90-809B-145582EB7365}|Mission11\\Mission11.csproj|solutionrelative:mission11\\data\\bookdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C0330174-FDAA-4B90-809B-145582EB7365}|Mission11\\Mission11.csproj|c:\\users\\andre\\source\\repos\\mission11\\backend\\mission11\\mission11\\controllers\\bookcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C0330174-FDAA-4B90-809B-145582EB7365}|Mission11\\Mission11.csproj|solutionrelative:mission11\\controllers\\bookcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -43,25 +39,12 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "BookDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\andre\\source\\repos\\Mission11\\backend\\Mission11\\Mission11\\Data\\BookDbContext.cs",
-              "RelativeDocumentMoniker": "Mission11\\Data\\BookDbContext.cs",
-              "ToolTip": "C:\\Users\\andre\\source\\repos\\Mission11\\backend\\Mission11\\Mission11\\Data\\BookDbContext.cs",
-              "RelativeToolTip": "Mission11\\Data\\BookDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-28T16:38:08.518Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "BookController.cs",
               "DocumentMoniker": "C:\\Users\\andre\\source\\repos\\Mission11\\backend\\Mission11\\Mission11\\Controllers\\BookController.cs",
               "RelativeDocumentMoniker": "Mission11\\Controllers\\BookController.cs",
               "ToolTip": "C:\\Users\\andre\\source\\repos\\Mission11\\backend\\Mission11\\Mission11\\Controllers\\BookController.cs",
               "RelativeToolTip": "Mission11\\Controllers\\BookController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwBUAAABBAAAAAAAAAA==",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAowBoAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-28T16:35:29.667Z",
               "EditorCaption": ""
