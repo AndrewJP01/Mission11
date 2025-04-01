@@ -16,7 +16,7 @@ export const fetchBooks = async (
       .join('&');
 
     const response = await fetch(
-      `https://localhost:5000/Book/AllBooks?pageSize=${pageSize}&pageNum=${pageNum}${
+      `https://bookstore-potter-backend.azurewebsites.net/Book/AllBooks?pageSize=${pageSize}&pageNum=${pageNum}${
         selectedCategories.length ? `&${categoryParams}` : ''
       }`
     );
@@ -32,13 +32,16 @@ export const fetchBooks = async (
 
 export const addBook = async (newBook: book): Promise<book> => {
   try {
-    const response = await fetch(`https://localhost:5000/Book/AddBook`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newBook),
-    });
+    const response = await fetch(
+      `https://bookstore-potter-backend.azurewebsites.net/Book/AddBook`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newBook),
+      }
+    );
 
     if (!response.ok) {
       // ✅ Check if response is NOT okay
@@ -59,7 +62,7 @@ export const updateBook = async (
 ): Promise<book> => {
   try {
     const response = await fetch(
-      `https://localhost:5000/Book/UpdateBook/${bookId}`,
+      `https://bookstore-potter-backend.azurewebsites.net/Book/UpdateBook/${bookId}`,
       {
         method: 'PUT',
         headers: {
@@ -79,7 +82,7 @@ export const updateBook = async (
 export const deleteBook = async (bookId: number): Promise<void> => {
   try {
     const response = await fetch(
-      `https://localhost:5000/Book/DeleteBook/${bookId}`,
+      `https://bookstore-potter-backend.azurewebsites.net/Book/DeleteBook/${bookId}`,
       {
         method: 'DELETE',
       }
