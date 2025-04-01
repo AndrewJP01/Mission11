@@ -1,0 +1,134 @@
+import { useState } from 'react';
+import { book } from '../types/book';
+import { addBook } from '../api/BooksApi';
+
+interface NewBookFormProps {
+  onSuccess: () => void;
+  onCancel: () => void;
+}
+
+const NewBookForm = ({ onSuccess, onCancel }: NewBookFormProps) => {
+  const [formData, setFormData] = useState<book>({
+    bookId: 0,
+    title: '',
+    author: '',
+    publisher: '',
+    isbn: '',
+    cLassification: '',
+    category: '',
+    pageCount: 0,
+    price: 0,
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await addBook(formData);
+    onSuccess();
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2>Add New Book</h2>
+
+      <label>
+        Book Title:{' '}
+        <input
+          type="text"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          required
+        />
+      </label>
+
+      <label>
+        Author:{' '}
+        <input
+          type="text"
+          name="author"
+          value={formData.author}
+          onChange={handleChange}
+          required
+        />
+      </label>
+
+      <label>
+        Publisher:{' '}
+        <input
+          type="text"
+          name="publisher"
+          value={formData.publisher}
+          onChange={handleChange}
+          required
+        />
+      </label>
+
+      <label>
+        ISBN:{' '}
+        <input
+          type="text"
+          name="isbn"
+          value={formData.isbn}
+          onChange={handleChange}
+          required
+        />
+      </label>
+
+      <label>
+        Classification:{' '}
+        <input
+          type="text"
+          name="cLassification"
+          value={formData.cLassification}
+          onChange={handleChange}
+          required
+        />
+      </label>
+
+      <label>
+        Category:{' '}
+        <input
+          type="text"
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          required
+        />
+      </label>
+
+      <label>
+        Page Count:{' '}
+        <input
+          type="number"
+          name="pageCount"
+          value={formData.pageCount}
+          onChange={handleChange}
+          required
+        />
+      </label>
+
+      <label>
+        Price:{' '}
+        <input
+          type="number"
+          step="0.01"
+          name="price"
+          value={formData.price}
+          onChange={handleChange}
+          required
+        />
+      </label>
+
+      <button type="submit">Add Book</button>
+      <button type="button" onClick={onCancel}>
+        Cancel
+      </button>
+    </form>
+  );
+};
+
+export default NewBookForm;

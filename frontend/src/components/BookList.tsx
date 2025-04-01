@@ -1,103 +1,109 @@
 import { useEffect, useState } from 'react';
-import { Book } from '../types/book';
 import { useNavigate } from 'react-router-dom';
+import { book } from '../types/book';
+import { fetchBooks } from '../api/BooksApi';
 
 function BookList({ selectedCategories }: { selectedCategories: string[] }) {
-  const [books, setBooks] = useState<Book[]>([]);
+  const [books, setBooks] = useState<book[]>([]);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc'); // Track sorting order
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      const categoryParams = selectedCategories
-        .map((cat) => `bookCategory=${encodeURIComponent(cat)}`)
-        .join('&');
+    const loadBooks = async () => {
+      setLoading(true);
+
       try {
-        const response = await fetch(
-          `https://localhost:5000/Book/AllBooks?pageSize=${pageSize}&pageNum=${pageNum}${selectedCategories.length ? `&${categoryParams}` : ''}`
-        );
-        if (!response.ok) throw new Error('Failed to fetch');
+        console.log('📢 Fetching books...');
+        const data = await fetchBooks(pageSize, pageNum, selectedCategories);
+        console.log('✅ API Response:', JSON.stringify(data, null, 2));
 
-        const data = await response.json();
-
-        // Apply sorting before setting the books state
-        const sortedBooks = [...data.books].sort((a, b) =>
-          sortOrder === 'asc'
-            ? a.title.localeCompare(b.title)
-            : b.title.localeCompare(a.title)
-        );
-
-        setBooks(sortedBooks);
-        setTotalItems(data.totalNumBooks);
-        setTotalPages(Math.ceil(data.totalNumBooks / pageSize));
+        if (data && data.books) {
+          // ✅ Fixed here
+          setBooks(data.books); // ✅ Fixed here
+          setTotalItems(data.totalNumBooks || 0);
+          setTotalPages(Math.ceil((data.totalNumBooks || 1) / pageSize));
+        } else {
+          console.error('❌ Invalid API response:', data);
+          setBooks([]);
+        }
       } catch (error) {
-        console.error('Error fetching books:', error);
+        console.error('❌ Error fetching books:', error);
         setBooks([]);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchBooks();
-  }, [pageSize, pageNum, sortOrder, selectedCategories]);
+    loadBooks();
+  }, [pageSize, pageNum, selectedCategories]);
 
   return (
     <>
-      {books.map((b) => (
-        <div id="bookCard" className="card" key={b.bookId}>
-          <h3>{b.title}</h3>
-          <div className="card-body">
-            <ul className="list-unstyled">
-              <li>
-                <strong>Author: </strong>
-                {b.author}
-              </li>
-              <li>
-                <strong>Publisher: </strong>
-                {b.publisher}
-              </li>
-              <li>
-                <strong>ISBN: </strong>
-                {b.isbn}
-              </li>
-              <li>
-                <strong>Classification: </strong>
-                {b.cLassification}
-              </li>
-              <li>
-                <strong>Category: </strong>
-                {b.category}
-              </li>
-              <li>
-                <strong>Page Count: </strong>
-                {b.pageCount}
-              </li>
-              <li>
-                <strong>Price: </strong>
-                {b.price}
-              </li>
-            </ul>
-            <button
-              className="btn btn-success"
-              onClick={() =>
-                navigate(`/purchase/${b.title}/${b.bookId}`, {
-                  state: { price: b.price },
-                })
-              }
-            >
-              Purchase
-            </button>
+      <h2>Book List</h2>
+
+      {loading ? (
+        <p>Loading books...</p>
+      ) : books.length === 0 ? (
+        <p>No books available.</p>
+      ) : (
+        books.map((b) => (
+          <div id="bookCard" className="card" key={b.bookId}>
+            <h3>{b.title}</h3>
+            <div className="card-body">
+              <ul className="list-unstyled">
+                <li>
+                  <strong>Author: </strong>
+                  {b.author}
+                </li>
+                <li>
+                  <strong>Publisher: </strong>
+                  {b.publisher}
+                </li>
+                <li>
+                  <strong>ISBN: </strong>
+                  {b.isbn}
+                </li>
+                <li>
+                  <strong>Classification: </strong>
+                  {b.cLassification}
+                </li>
+                <li>
+                  <strong>Category: </strong>
+                  {b.category}
+                </li>
+                <li>
+                  <strong>Page Count: </strong>
+                  {b.pageCount}
+                </li>
+                <li>
+                  <strong>Price: </strong>${b.price.toFixed(2)}
+                </li>
+              </ul>
+              <button
+                className="btn btn-success"
+                onClick={() =>
+                  navigate(`/purchase/${b.title}/${b.bookId}`, {
+                    state: { price: b.price },
+                  })
+                }
+              >
+                Purchase
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      )}
 
       {/* Pagination Controls */}
       <div>
         <button
           disabled={pageNum === 1}
-          onClick={() => setPageNum(pageNum - 1)}
+          onClick={() => setPageNum((prev) => prev - 1)}
         >
           Previous
         </button>
@@ -114,7 +120,7 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
 
         <button
           disabled={pageNum === totalPages || totalPages === 0}
-          onClick={() => setPageNum(pageNum + 1)}
+          onClick={() => setPageNum((prev) => prev + 1)}
         >
           Next
         </button>
@@ -126,8 +132,8 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
         Results per page:
         <select
           value={pageSize}
-          onChange={(p) => {
-            setPageSize(Number(p.target.value));
+          onChange={(e) => {
+            setPageSize(Number(e.target.value));
             setPageNum(1);
           }}
         >
@@ -140,7 +146,7 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
       <button
         onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
       >
-        Sort by Project Name ({sortOrder === 'asc' ? 'Z-A' : 'A-Z'})
+        Sort by Name ({sortOrder === 'asc' ? 'Z-A' : 'A-Z'})
       </button>
     </>
   );
